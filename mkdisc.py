@@ -32,8 +32,8 @@ class IndexReader(object):
 		folder = None
 		for line in fileinput.input(self.filename):
 			filename = None
-            if (len(line) == 0) or (line[0:1] == ';'): 
-                continue # ignore comments and blank lines
+			if (len(line) == 0) or (line[0:1] == ';'): 
+				continue # ignore comments and blank lines
 			folder_match = self.RE_FOLDER.match(line)
 			if folder_match is not None:
 				folder = folder_match.group(1).strip()
