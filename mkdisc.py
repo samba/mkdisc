@@ -86,12 +86,11 @@ class TreeLinker(object):
 				os.remove(os.path.join(root, f))
 			for d in dirs:
 				p = os.path.join(root, d)
-				if os.path.isdir(p):
-					os.rmdir(p)
-				elif os.path.islink(p):
+				if os.path.islink(p):
 					os.remove(p)
-	
-					
+				elif os.path.isdir(p):
+					os.rmdir(p)
+									
 class ImageBuilder(object):
 
 	# TODO: MD5 generation
@@ -117,14 +116,14 @@ class ImageBuilder(object):
 		return subprocess.Popen(command, shell = True, stdout = subprocess.PIPE).communicate()
 	
 
-# TODO: options to simply create the index tree + estimate size
 
 def main(args):
+	input_profile = args[0]
+	output_image = (len(args) > 1) and args[1]
 	linker_temp = tempfile.mkdtemp()
-	linker = TreeLinker(linker_temp, args[0])
+	linker = TreeLinker(linker_temp, input_profile)
 	linker.setup()
 
-	builder = ImageBuilder(args[1], linker_temp)
 
 	size = sum(os.path.getsize(s) for s in linker.scan())
 
@@ -132,8 +131,11 @@ def main(args):
 	print 'DVD-5: {0:.2f}% full ({1:d})'.format(100* size / DVD5_GB, size)
 	print 'DVD-9: {0:.2f}% full ({1:d})'.format(100* size / DVD9_GB, size)
 
-	print 'Preparing image... {0}'.format(args[1])
-	builder.run()
+
+	if output_image:
+		print 'Preparing image... {0}'.format(output_image)
+		builder = ImageBuilder(output_image, linker_temp)
+		builder.run()
 
 	print 'Cleaning out... {0}'.format(linker_temp)
 	linker.wipeout()
@@ -143,3 +145,5 @@ def main(args):
 
 if __name__ == '__main__':
 	main(sys.argv[1:])	
+
+# vim: set noet
