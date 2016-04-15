@@ -128,8 +128,8 @@ def main(args):
 	size = sum(os.path.getsize(s) for s in linker.scan())
 
 	print 'Path: {0}'.format(linker.output)
-	print 'DVD-5: {0:.2f}% full ({1:d})'.format(100* size / DVD5_GB, size)
-	print 'DVD-9: {0:.2f}% full ({1:d})'.format(100* size / DVD9_GB, size)
+	print 'DVD-5: {:.2%} full ({:d})'.format(size / DVD5_GB, size)
+	print 'DVD-9: {:.2%} full ({:d})'.format(size / DVD9_GB, size)
 
 
 	if output_image:
